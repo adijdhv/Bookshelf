@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookShelf - Write, Publish, Monetize with AI & NFTs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #fafafa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4f46e5;
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: #4f46e5;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3730a3;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #6b7280;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #f9fafb;
+            color: #4f46e5;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .page {
+            display: none;
+            padding: 2rem 0;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: #4f46e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+        }
+
+        /* Book Grid */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            transition: transform 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .book-info {
+            padding: 1rem;
+        }
+
+        .book-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-author {
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        /* Search and Filters */
+        .search-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+        }
+
+        /* Writing Editor */
+        .editor-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            height: 70vh;
+        }
+
+        .editor-sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+
+        .editor-main {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-toolbar {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .editor-content {
+            flex: 1;
+            padding: 1.5rem;
+        }
+
+        .editor-textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: none;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        /* Dashboard */
+        .dashboard-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tab-button {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            color: #4f46e5;
+            border-bottom-color: #4f46e5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4f46e5;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        /* Footer */
+        footer {
+            background: #1f2937;
+            color: #9ca3af;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+
+            .search-filters {
+                flex-direction: column;
+            }
+
+            .dashboard-tabs {
+                flex-wrap: wrap;
+            }
+        }
+
+        .wallet-connected {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo" onclick="showPage('home')">📚 BookShelf</a>
+                
+                <nav>
+                    <ul>
+                        <li><a href="#" onclick="showPage('home')" class="nav-link active">Home</a></li>
+                        <li><a href="#" onclick="showPage('explore')" class="nav-link">Explore</a></li>
+                        <li><a href="#" onclick="showPage('write')" class="nav-link">Write a Book</a></li>
+                        <li><a href="#" onclick="showPage('marketplace')" class="nav-link">Marketplace</a></li>
+                    </ul>
+                </nav>
+
+                <div class="auth-buttons">
+                    <div id="walletStatus" class="wallet-connected" style="display: none;">
+                        <i data-feather="check-circle"></i>
+                        <span>0x7a...9f2c</span>
+                    </div>
+                    <button class="btn btn-secondary" onclick="showPage('dashboard')" id="dashboardBtn" style="display: none;">Dashboard</button>
+                    <button class="btn btn-secondary" onclick="login()" id="loginBtn">Login</button>
+                    <button class="btn btn-primary" onclick="signup()" id="signupBtn">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="container">
+                    <h1>Write, Publish, Monetize Your Books with AI & NFTs</h1>
+                    <p>The future of publishing is here. Create stunning books with AI assistance, mint them as NFTs, and earn royalties forever.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="showPage('write')">Start Writing</button>
+                        <button class="btn btn-secondary" onclick="showPage('explore')">Explore Library</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="container">
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i data-feather="edit-3"></i>
+                        </div>
+                        <h3>AI-Powered Writing</h3>
+                        <p>Get intelligent suggestions, overcome writer's block, and create compelling content with our advanced AI writing assistant.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i data-feather="hexagon"></i>
+                        </div>
+                        <h3>NFT Publishing</h3>
+                        <p>Mint your books as unique NFTs for just ₹130. Prove ownership, enable resales, and create scarcity for your work.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i data-feather="users"></i>
+                        </div>
+                        <h3>Reader Subscriptions</h3>
+                        <p>Build a loyal readership with subscription-based access. Readers get unlimited access to your entire catalog.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i data-feather="trending-up"></i>
+                        </div>
+                        <h3>Smart Royalties</h3>
+                        <p>Earn automatic royalties on every resale. Our smart contracts ensure you get paid fairly for your creative work.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Explore Library -->
+        <div id="explore" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Explore Library</h1>
+                    <p class="page-subtitle">Discover amazing books from talented authors around the world</p>
+                </div>
+
+                <div class="search-filters">
+                    <input type="text" class="search-box" placeholder="Search books, authors, genres...">
+                    <select class="filter-select">
+                        <option>All Genres</option>
+                        <option>Fiction</option>
+                        <option>Non-Fiction</option>
+                        <option>Science Fiction</option>
+                        <option>Romance</option>
+                        <option>Thriller</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All Ratings</option>
+                        <option>5 Stars</option>
+                        <option>4+ Stars</option>
+                        <option>3+ Stars</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Price Range</option>
+                        <option>Free</option>
+                        <option>Under ₹100</option>
+                        <option>₹100-500</option>
+                        <option>₹500+</option>
+                    </select>
+                </div>
+
+                <div class="books-grid">
+                    <div class="book-card">
+                        <div class="book-cover">The Digital Frontier</div>
+                        <div class="book-info">
+                            <h3 class="book-title">The Digital Frontier</h3>
+                            <p class="book-author">by Sarah Chen</p>
+                            <div class="book-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span>4.8 (127 reviews)</span>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-primary" onclick="showModal('readModal')">Read</button>
+                                <button class="btn btn-secondary">₹250</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="book-card">
+                        <div class="book-cover">Moonlight Secrets</div>
+                        <div class="book-info">
+                            <h3 class="book-title">Moonlight Secrets</h3>
+                            <p class="book-author">by Alex Rivera</p>
+                            <div class="book-rating">
+                                <span class="stars">⭐⭐⭐⭐</span>
+                                <span>4.2 (89 reviews)</span>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-primary" onclick="showModal('subscribeModal')">Subscribe to Read</button>
+                                <button class="btn btn-secondary">₹180</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="book-card">
+                        <div class="book-cover">Code & Coffee</div>
+                        <div class="book-info">
+                            <h3 class="book-title">Code & Coffee</h3>
+                            <p class="book-author">by Dev Kumar</p>
+                            <div class="book-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span>4.9 (203 reviews)</span>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-success">Free</button>
+                                <button class="btn btn-secondary">Read</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="book-card">
+                        <div class="book-cover">Quantum Dreams</div>
+                        <div class="book-info">
+                            <h3 class="book-title">Quantum Dreams</h3>
+                            <p class="book-author">by Dr. Maya Patel</p>
+                            <div class="book-rating">
+                                <span class="stars">⭐⭐⭐⭐</span>
+                                <span>4.5 (156 reviews)</span>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-primary" onclick="showModal('readModal')">Read</button>
+                                <button class="btn btn-secondary">₹320</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Write a Book -->
+        <div id="write" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Write Your Book</h1>
+                    <p class="page-subtitle">Create your masterpiece with AI-powered writing assistance</p>
+                </div>
+
+                <div class="editor-container">
+                    <div class="editor-sidebar">
+                        <div class="form-group">
+                            <label class="form-label">Book Title</label>
+                            <input type="text" class="form-input" placeholder="Enter your book title">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Genre</label>
+                            <select class="form-select">
+                                <option>Select Genre</option>
+                                <option>Fiction</option>
+                                <option>Non-Fiction</option>
+                                <option>Science Fiction</option>
+                                <option>Romance</option>
+                                <option>Thriller</option>
+                                <option>Self-Help</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Target Price</label>
+                            <input type="number" class="form-input" placeholder="₹ 0">
+                        </div>
+
+                        <div style="background: #f3f4f6; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Word Count:</span>
+                                <strong id="wordCount">0</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Estimated Read Time:</span>
+                                <strong id="readTime">0 min</strong>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success" style="width: 100%; margin-bottom: 1rem;" onclick="showModal('mintModal')">
+                            Mint as NFT (₹130)
+                        </button>
+
+                        <button class="btn btn-secondary" style="width: 100%;">
+                            Save Draft
+                        </button>
+                    </div>
+
+                    <div class="editor-main">
+                        <div class="editor-toolbar">
+                            <button class="btn btn-primary" onclick="getAISuggestion()">
+                                <i data-feather="zap"></i>
+                                AI Assist
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i data-feather="bold"></i>
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i data-feather="italic"></i>
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i data-feather="underline"></i>
+                            </button>
+                        </div>
+                        <div class="editor-content">
+                            <textarea class="editor-textarea" placeholder="Start writing your story here..." onkeyup="updateWordCount(this)"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marketplace -->
+        <div id="marketplace" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">NFT Marketplace</h1>
+                    <p class="page-subtitle">Buy, sell, and trade book NFTs</p>
+                </div>
+
+                <div class="search-filters">
+                    <input type="text" class="search-box" placeholder="Search NFT books...">
+                    <select class="filter-select">
+                        <option>Sort by Price</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Recently Listed</option>
+                        <option>Most Popular</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All Categories</option>
+                        <option>First Editions</option>
+                        <option>Limited Editions</option>
+                        <option>Signed Copies</option>
+                    </select>
+                </div>
+
+                <div class="books-grid">
+                    <div class="book-card">
+                        <div class="book-cover">The Digital Frontier #001</div>
+                        <div class="book-info">
+                            <h3 class="book-title">The Digital Frontier #001</h3>
+                            <p class="book-author">First Edition by Sarah Chen</p>
+                            <div class="book-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span>4.8 (127 reviews)</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0;">
+                                <span style="font-weight: 600; color: #4f46e5;">₹1,250</span>
+                                <span style="color: #6b7280; font-size: 0.875rem;">Owner: 0x7a...9f2c</span>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%;" onclick="showModal('buyModal')">Buy Now</button>
+                        </div>
+                    </div>
+
+                    <div class="book-card">
+                        <div class="book-cover">Moonlight Secrets #003</div>
+                        <div class="book-info">
+                            <h3 class="book-title">Moonlight Secrets #003</h3>
+                            <p class="book-author">Limited Edition by Alex Rivera</p>
+                            <div class="book-rating">
+                                <span class="stars">⭐⭐⭐⭐</span>
+                                <span>4.2 (89 reviews)</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0;">
+                                <span style="font-weight: 600; color: #4f46e5;">₹890</span>
+                                <span style="color: #6b7280; font-size: 0.875rem;">Owner: 0x3b...7k8m</span>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%;" onclick="showModal('buyModal')">Buy Now</button>
+                        </div>
+                    </div>
+
+                    <div class="book-card">
+                        <div class="book-cover">Quantum Dreams #007</div>
+                        <div class="book-info">
+                            <h3 class="book-title">Quantum Dreams #007</h3>
+                            <p class="book-author">Signed Edition by Dr. Maya Patel</p>
+                            <div class="book-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span>4.9 (156 reviews)</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0;">
+                                <span style="font-weight: 600; color: #4f46e5;">₹2,100</span>
+                                <span style="color: #6b7280; font-size: 0.875rem;">Owner: 0x9c...2n4p</span>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%;" onclick="showModal('buyModal')">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Manage your books, NFTs, and earnings</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">₹12,450</div>
+                        <div class="stat-label">Total Earnings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Books Published</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">1,247</div>
+                        <div class="stat-label">Total Readers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">NFTs Owned</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-tabs">
+                    <button class="tab-button active" onclick="showTab('myBooks')">📘 My Books</button>
+                    <button class="tab-button" onclick="showTab('myNFTs')">👛 My NFTs</button>
+                    <button class="tab-button" onclick="showTab('subscriptions')">🧾 Subscriptions</button>
+                    <button class="tab-button" onclick="showTab('earnings')">💸 Earnings</button>
+                </div>
+
+                <div id="myBooks" class="tab-content active">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>My Published Books</h3>
+                        <button class="btn btn-primary" onclick="showPage('write')">Create New Book</button>
+                    </div>
+                    <div class="books-grid">
+                        <div class="book-card">
+                            <div class="book-cover">The Digital Frontier</div>
+                            <div class="book-info">
+                                <h3 class="book-title">The Digital Frontier</h3>
+                                <p class="book-author">Published 2 months ago</p>
+                                <div style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                                    <span>₹250 • 127 sales</span>
+                                    <span style="color: #10b981; font-weight: 600;">₹31,750 earned</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-secondary">Edit</button>
+                                    <button class="btn btn-secondary">Analytics</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="book-card">
+                            <div class="book-cover">Code Chronicles</div>
+                            <div class="book-info">
+                                <h3 class="book-title">Code Chronicles</h3>
+                                <p class="book-author">Published 1 month ago</p>
+                                <div style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                                    <span>₹180 • 89 sales</span>
+                                    <span style="color: #10b981; font-weight: 600;">₹16,020 earned</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-secondary">Edit</button>
+                                    <button class="btn btn-secondary">Analytics</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="myNFTs" class="tab-content">
+                    <h3 style="margin-bottom: 1rem;">My NFT Collection</h3>
+                    <div class="books-grid">
+                        <div class="book-card">
+                            <div class="book-cover">The Digital Frontier #001</div>
+                            <div class="book-info">
+                                <h3 class="book-title">The Digital Frontier #001</h3>
+                                <p class="book-author">First Edition • Owned</p>
+                                <div style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                                    <span>Purchased: ₹250</span>
+                                    <span style="color: #10b981; font-weight: 600;">Current: ₹1,250</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-primary">List for Sale</button>
+                                    <button class="btn btn-secondary">Transfer</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="book-card">
+                            <div class="book-cover">Quantum Dreams #007</div>
+                            <div class="book-info">
+                                <h3 class="book-title">Quantum Dreams #007</h3>
+                                <p class="book-author">Signed Edition • Owned</p>
+                                <div style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                                    <span>Purchased: ₹320</span>
+                                    <span style="color: #10b981; font-weight: 600;">Current: ₹2,100</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn btn-primary">List for Sale</button>
+                                    <button class="btn btn-secondary">Transfer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="subscriptions" class="tab-content">
+                    <h3 style="margin-bottom: 1rem;">Active Subscriptions</h3>
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4>Sarah Chen's Library</h4>
+                                    <p style="color: #6b7280;">Access to 12 books • Expires in 23 days</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span style="font-weight: 600;">₹299/month</span>
+                                    <br>
+                                    <button class="btn btn-secondary" style="margin-top: 0.5rem;">Manage</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.07);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4>Tech Writers Collective</h4>
+                                    <p style="color: #6b7280;">Access to 45 books • Expires in 8 days</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span style="font-weight: 600;">₹599/month</span>
+                                    <br>
+                                    <button class="btn btn-secondary" style="margin-top: 0.5rem;">Manage</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="earnings" class="tab-content">
+                    <h3 style="margin-bottom: 1rem;">Earnings Overview</h3>
+                    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); margin-bottom: 2rem;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+                            <div>
+                                <h4 style="color: #6b7280; margin-bottom: 0.5rem;">This Month</h4>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;">₹4,250</div>
+                            </div>
+                            <div>
+                                <h4 style="color: #6b7280; margin-bottom: 0.5rem;">Last Month</h4>
+                                <div style="font-size: 1.5rem; font-weight: 700;">₹3,890</div>
+                            </div>
+                            <div>
+                                <h4 style="color: #6b7280; margin-bottom: 0.5rem;">All Time</h4>
+                                <div style="font-size: 1.5rem; font-weight: 700;">₹12,450</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-bottom: 1rem;">Recent Transactions</h4>
+                    <div style="background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); overflow: hidden;">
+                        <div style="padding: 1rem; border-bottom: 1px solid #e5e7eb; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem; font-weight: 600; background: #f9fafb;">
+                            <span>Book</span>
+                            <span>Type</span>
+                            <span>Amount</span>
+                            <span>Date</span>
+                        </div>
+                        <div style="padding: 1rem; border-bottom: 1px solid #e5e7eb; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem;">
+                            <span>The Digital Frontier</span>
+                            <span style="color: #10b981;">Sale</span>
+                            <span>₹250</span>
+                            <span style="color: #6b7280;">2 hours ago</span>
+                        </div>
+                        <div style="padding: 1rem; border-bottom: 1px solid #e5e7eb; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem;">
+                            <span>Code Chronicles</span>
+                            <span style="color: #4f46e5;">Royalty</span>
+                            <span>₹18</span>
+                            <span style="color: #6b7280;">1 day ago</span>
+                        </div>
+                        <div style="padding: 1rem; border-bottom: 1px solid #e5e7eb; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem;">
+                            <span>The Digital Frontier</span>
+                            <span style="color: #10b981;">Sale</span>
+                            <span>₹250</span>
+                            <span style="color: #6b7280;">3 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Mint NFT Modal -->
+    <div id="mintModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Mint Your Book as NFT</h3>
+                <button class="close-modal" onclick="hideModal('mintModal')">&times;</button>
+            </div>
+            <div>
+                <p style="margin-bottom: 1rem; color: #6b7280;">Transform your book into a unique digital asset that can be owned, traded, and resold.</p>
+                
+                <div style="background: #f3f4f6; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Minting Details:</h4>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Minting Fee:</span>
+                        <strong>₹130</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Platform Fee:</span>
+                        <strong>5% on sales</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Royalty on Resales:</span>
+                        <strong>10%</strong>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Edition Size</label>
+                    <select class="form-select">
+                        <option>Limited Edition (100 copies)</option>
+                        <option>Standard Edition (1000 copies)</option>
+                        <option>Unlimited Edition</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn btn-secondary" onclick="hideModal('mintModal')">Cancel</button>
+                    <button class="btn btn-primary" onclick="mintNFT()">Mint NFT (₹130)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buy NFT Modal -->
+    <div id="buyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Purchase NFT</h3>
+                <button class="close-modal" onclick="hideModal('buyModal')">&times;</button>
+            </div>
+            <div>
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="width: 80px; height: 100px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; text-align: center;">
+                        The Digital Frontier #001
+                    </div>
+                    <div>
+                        <h4>The Digital Frontier #001</h4>
+                        <p style="color: #6b7280;">First Edition by Sarah Chen</p>
+                        <div style="margin-top: 0.5rem;">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span style="color: #6b7280;">4.8 (127 reviews)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #f3f4f6; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>NFT Price:</span>
+                        <strong>₹1,250</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Platform Fee (2.5%):</span>
+                        <span>₹31.25</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: 600; border-top: 1px solid #d1d5db; padding-top: 0.5rem;">
+                        <span>Total:</span>
+                        <span>₹1,281.25</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn btn-secondary" onclick="hideModal('buyModal')">Cancel</button>
+                    <button class="btn btn-primary" onclick="buyNFT()">Complete Purchase</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subscribe Modal -->
+    <div id="subscribeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Subscribe to Read</h3>
+                <button class="close-modal" onclick="hideModal('subscribeModal')">&times;</button>
+            </div>
+            <div>
+                <p style="margin-bottom: 1rem; color: #6b7280;">Get unlimited access to this author's entire library of books.</p>
+                
+                <div style="display: grid; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="border: 2px solid #4f46e5; border-radius: 8px; padding: 1rem; position: relative;">
+                        <div style="position: absolute; top: -10px; left: 1rem; background: #4f46e5; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">RECOMMENDED</div>
+                        <h4 style="margin-bottom: 0.5rem;">Monthly Subscription</h4>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #4f46e5; margin-bottom: 0.5rem;">₹299/month</div>
+                        <p style="color: #6b7280;">Access to all 12 books • Cancel anytime</p>
+                    </div>
+                    
+                    <div style="border: 1px solid #d1d5db; border-radius: 8px; padding: 1rem;">
+                        <h4 style="margin-bottom: 0.5rem;">Annual Subscription</h4>
+                        <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">
+                            ₹2,999/year 
+                            <span style="font-size: 0.875rem; color: #10b981;">(Save 17%)</span>
+                        </div>
+                        <p style="color: #6b7280;">Access to all books • Best value</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-secondary" onclick="hideModal('subscribeModal')">Cancel</button>
+                    <button class="btn btn-primary" onclick="subscribe()">Subscribe Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Read Modal -->
+    <div id="readModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Reading Access Required</h3>
+                <button class="close-modal" onclick="hideModal('readModal')">&times;</button>
+            </div>
+            <div>
+                <p style="margin-bottom: 1rem; color: #6b7280;">To read this book, you can either purchase it directly or subscribe to the author's library.</p>
+                
+                <div style="display: grid; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="border: 1px solid #d1d5db; border-radius: 8px; padding: 1rem;">
+                        <h4 style="margin-bottom: 0.5rem;">Purchase Book</h4>
+                        <div style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">₹250</div>
+                        <p style="color: #6b7280;">Own forever • Download PDF • Offline reading</p>
+                    </div>
+                    
+                    <div style="border: 1px solid #d1d5db; border-radius: 8px; padding: 1rem;">
+                        <h4 style="margin-bottom: 0.5rem;">Subscribe to Author</h4>
+                        <div style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">₹299/month</div>
+                        <p style="color: #6b7280;">Access all 12 books • New releases included</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-secondary" onclick="hideModal('readModal')">Cancel</button>
+                    <button class="btn btn-secondary" onclick="purchaseBook()">Purchase (₹250)</button>
+                    <button class="btn btn-primary" onclick="showModal('subscribeModal'); hideModal('readModal')">Subscribe</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 BookShelf. All rights reserved. | <a href="#" style="color: #9ca3af;">About</a> | <a href="#" style="color: #9ca3af;">Blog</a> | <a href="#" style="color: #9ca3af;">Terms</a> | <a href="#" style="color: #9ca3af;">Contact</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Feather Icons
+        feather.replace();
+
+        // Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Find and activate the correct nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                if (link.onclick && link.onclick.toString().includes(pageId)) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Tab functionality for dashboard
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.display = 'none';
+            });
+            
+            // Show selected tab
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+                selectedTab.style.display = 'block';
+            }
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Find and activate the correct tab button
+            event.target.classList.add('active');
+        }
+
+        // Modal functionality
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Authentication
+        let isLoggedIn = false;
+        let walletConnected = false;
+
+        function login() {
+            // Simulate login
+            isLoggedIn = true;
+            walletConnected = true;
+            updateAuthUI();
+        }
+
+        function signup() {
+            // Simulate signup
+            isLoggedIn = true;
+            walletConnected = true;
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const loginBtn = document.getElementById('loginBtn');
+            const signupBtn = document.getElementById('signupBtn');
+            const dashboardBtn = document.getElementById('dashboardBtn');
+            const walletStatus = document.getElementById('walletStatus');
+
+            if (isLoggedIn) {
+                loginBtn.style.display = 'none';
+                signupBtn.textContent = 'Logout';
+                signupBtn.onclick = logout;
+                dashboardBtn.style.display = 'inline-flex';
+                
+                if (walletConnected) {
+                    walletStatus.style.display = 'flex';
+                }
+            }
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            walletConnected = false;
+            document.getElementById('loginBtn').style.display = 'inline-flex';
+            document.getElementById('signupBtn').textContent = 'Sign Up';
+            document.getElementById('signupBtn').onclick = signup;
+            document.getElementById('dashboardBtn').style.display = 'none';
+            document.getElementById('walletStatus').style.display = 'none';
+            showPage('home');
+        }
+
+        // Writing Editor
+        function updateWordCount(textarea) {
+            const text = textarea.value;
+            const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            const readTime = Math.ceil(wordCount / 200); // Assuming 200 words per minute
+            
+            document.getElementById('wordCount').textContent = wordCount.toLocaleString();
+            document.getElementById('readTime').textContent = readTime + ' min';
+        }
+
+        function getAISuggestion() {
+            const suggestions = [
+                "Consider adding more descriptive details to enhance the scene.",
+                "This dialogue could be more impactful with emotional subtext.",
+                "Try varying your sentence structure for better flow.",
+                "A metaphor here could strengthen the imagery.",
+                "Consider the pacing - this section might benefit from more tension."
+            ];
+            
+            const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            alert("AI Suggestion: " + randomSuggestion);
+        }
+
+        // NFT and Purchase Functions
+        function mintNFT() {
+            alert("🎉 Your book has been successfully minted as an NFT! Transaction ID: 0x7a8b9c2d...");
+            hideModal('mintModal');
+        }
+
+        function buyNFT() {
+            alert("🎉 NFT purchased successfully! It has been added to your collection.");
+            hideModal('buyModal');
+        }
+
+        function subscribe() {
+            alert("🎉 Subscription activated! You now have access to the author's complete library.");
+            hideModal('subscribeModal');
+        }
+
+        function purchaseBook() {
+            alert("🎉 Book purchased successfully! You can now read it anytime.");
+            hideModal('readModal');
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize with home page
+            showPage('home');
+            
+            // Initialize dashboard tabs
+            const myBooksTab = document.getElementById('myBooks');
+            if (myBooksTab) {
+                myBooksTab.style.display = 'block';
+            }
+            
+            // Hide other tabs initially
+            ['myNFTs', 'subscriptions', 'earnings'].forEach(tabId => {
+                const tab = document.getElementById(tabId);
+                if (tab) {
+                    tab.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
